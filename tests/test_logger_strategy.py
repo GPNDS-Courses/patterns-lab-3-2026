@@ -96,3 +96,37 @@ def test_non_creator_object_is_rejected() -> None:
         pass
     else:
         raise AssertionError("Ожидалось исключение TypeError")
+
+
+# Тест проверяет форматирование всех допустимых уровней журнала.
+def test_all_log_levels_are_accepted() -> None:
+    logger = Logger(ConsoleStrategyCreator())
+
+    levels = ["TRACE", "INFO", "WARN", "ERROR", "FATAL"]
+
+    for level in levels:
+        result = logger.log(level, "Проверка")
+        assert f"[{level}] Проверка" in result
+
+
+# Негативный тест проверяет отклонение уровня со значением None.
+def test_none_log_level_is_rejected() -> None:
+    logger = Logger(ConsoleStrategyCreator())
+
+    try:
+        logger.log(None, "Сообщение")
+    except TypeError:
+        pass
+    else:
+        raise AssertionError("Ожидалось исключение TypeError")
+
+
+# Негативный тест проверяет отклонение объекта, не реализующего интерфейс Strategy.
+def test_non_strategy_object_is_rejected() -> None:
+    try:
+        logger = Logger(ConsoleStrategyCreator())
+        logger.set_strategy(object())
+    except TypeError:
+        pass
+    else:
+        raise AssertionError("Ожидалось исключение TypeError")

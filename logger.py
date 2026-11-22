@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
@@ -25,6 +26,11 @@ class OutputStrategy(ABC):
 class ConsoleOutputStrategy(OutputStrategy):
     def write(self, formatted_message: str) -> None:
         print(formatted_message)
+
+
+class ErrorOutputStrategy(OutputStrategy):
+    def write(self, formatted_message: str) -> None:
+        print(formatted_message, file=sys.stderr)
 
 
 class FileOutputStrategy(OutputStrategy):

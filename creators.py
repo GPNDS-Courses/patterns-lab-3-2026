@@ -3,6 +3,7 @@ from pathlib import Path
 
 from logger import (
     ConsoleOutputStrategy,
+    ErrorOutputStrategy,
     FileOutputStrategy,
     OutputStrategy,
     UpperFileOutputStrategy,
@@ -10,7 +11,7 @@ from logger import (
 
 
 class OutputStrategyCreator(ABC):
-    """Базовый создатель: объявляет Factory Method для одной стратегии."""
+    """объявляет Factory Method для одной стратегии."""
 
     @abstractmethod
     def create(self, log_file: str | Path = "application.log") -> OutputStrategy:
@@ -25,6 +26,11 @@ class ConsoleStrategyCreator(OutputStrategyCreator):
 class FileStrategyCreator(OutputStrategyCreator):
     def create(self, log_file: str | Path = "application.log") -> OutputStrategy:
         return FileOutputStrategy(log_file)
+
+
+class ErrorStrategyCreator(OutputStrategyCreator):
+    def create(self, log_file: str | Path = "application.log") -> OutputStrategy:
+        return ErrorOutputStrategy()
 
 
 class UpperFileStrategyCreator(OutputStrategyCreator):

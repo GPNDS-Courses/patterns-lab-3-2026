@@ -1,0 +1,73 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "Strategy" {
+    abstract class OutputStrategy {
+        + write(formattedMessage: str): void
+    }
+
+    class ConsoleOutputStrategy {
+        + write(formattedMessage: str): void
+    }
+
+    class FileOutputStrategy {
+        - logFile: Path
+        + write(formattedMessage: str): void
+    }
+
+    class UpperFileOutputStrategy {
+        - logFile: Path
+        + write(formattedMessage: str): void
+    }
+
+    class Logger {
+        - strategy: OutputStrategy
+        + setStrategy(strategy: OutputStrategy): void
+        + setCreator(creator: OutputStrategyCreator, logFile: str): void
+        + log(level: LogLevel, message: str): str
+        - format(level: LogLevel, message: str): str
+    }
+
+    OutputStrategy <|-- ConsoleOutputStrategy
+    OutputStrategy <|-- FileOutputStrategy
+    OutputStrategy <|-- UpperFileOutputStrategy
+    Logger o--> OutputStrategy : strategy
+}
+
+package "Factory Method" {
+    abstract class OutputStrategyCreator {
+        + create(logFile: str): OutputStrategy
+    }
+
+    class ConsoleStrategyCreator {
+        + create(logFile: str): OutputStrategy
+    }
+
+    class FileStrategyCreator {
+        + create(logFile: str): OutputStrategy
+    }
+
+    class UpperFileStrategyCreator {
+        + create(logFile: str): OutputStrategy
+    }
+
+    OutputStrategyCreator <|-- ConsoleStrategyCreator
+    OutputStrategyCreator <|-- FileStrategyCreator
+    OutputStrategyCreator <|-- UpperFileStrategyCreator
+
+    ConsoleStrategyCreator ..> ConsoleOutputStrategy : creates
+    FileStrategyCreator ..> FileOutputStrategy : creates
+    UpperFileStrategyCreator ..> UpperFileOutputStrategy : creates
+}
+
+class app {
+    + main(): void
+}
+
+app ..> Logger
+app ..> ConsoleStrategyCreator
+app ..> FileStrategyCreator
+app ..> UpperFileStrategyCreator
+Logger o--> OutputStrategyCreator : creator
+
+@enduml

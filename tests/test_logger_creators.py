@@ -2,12 +2,14 @@ from pathlib import Path
 
 from creators import (
     ConsoleStrategyCreator,
+    ErrorStrategyCreator,
     FileStrategyCreator,
     OutputStrategyCreator,
     UpperFileStrategyCreator,
 )
 from logger import (
     ConsoleOutputStrategy,
+    ErrorOutputStrategy,
     FileOutputStrategy,
     Logger,
     LogLevel,
@@ -39,6 +41,20 @@ def test_upper_file_creator_creates_upper_file_strategy(tmp_path: Path) -> None:
     strategy = creator.create(path)
 
     assert isinstance(strategy, UpperFileOutputStrategy)
+
+
+# Тест проверяет создание ErrorOutputStrategy и вывод через stderr.
+def test_error_creator_creates_error_strategy(capsys) -> None:
+    creator = ErrorStrategyCreator()
+    strategy = creator.create()
+
+    assert isinstance(strategy, ErrorOutputStrategy)
+
+    logger = Logger(creator)
+    logger.log(LogLevel.FATAL, "Critical failure")
+
+    captured = capsys.readouterr()
+    assert "[FATAL] Critical failure" in captured.err
 
 
 # Тест проверяет передачу готовой стратегии из создателя в Logger.
