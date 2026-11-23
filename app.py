@@ -1,11 +1,19 @@
-from legacy import LegacyLogger, LogLevel
+from enums import LogLevel
+from factory import (
+    ConsoleLoggerFactoryCreator,
+    FileLoggerFactoryCreator,
+    UpperFileLoggerCreator,
+)
 
 
 def main() -> None:
-    logger = LegacyLogger("logs/app.log")
-    logger.log(LogLevel.INFO, "Application started", output="console")
-    logger.log(LogLevel.WARN, "Low disk space", output="file")
-    logger.log(LogLevel.ERROR, "Example error", output="upper_file")
+    console = ConsoleLoggerFactoryCreator().create_logger()
+    file = FileLoggerFactoryCreator("logs/app.log").create_logger()
+    upper = UpperFileLoggerCreator("logs/app.log").create_logger()
+
+    console.log(LogLevel.INFO, "Application started")
+    file.log(LogLevel.WARN, "Low disk space")
+    upper.log(LogLevel.ERROR, "Example error")
 
 
 if __name__ == "__main__":

@@ -1,12 +1,9 @@
-# Диаграмма
+# Диаграммы
 
-Поместите сюда структурную диаграмму итогового решения.
+Исходники лежат рядом в формате draw.io (`architecture.drawio`), их можно открыть и поправить в draw.io.
 
-Допустимые форматы:
+## Strategy + Factory Method
 
-- `architecture.puml`;
-- `architecture.mmd`;
-- изображение, экспортированное из diagrams.net;
-- другой согласованный с преподавателем формат.
+Контекст `Logger`, интерфейс `AbstractStrategy` с тремя реализациями и `AbstractLoggerFactory` с тремя создателями.
 
-На диаграмме должны быть различимы участники шаблонов Strategy и Factory Method.
+![Strategy + Factory Method](architecture.png)
