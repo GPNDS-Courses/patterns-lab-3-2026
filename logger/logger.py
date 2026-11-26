@@ -14,7 +14,7 @@ class Logger:
 
     def log(self, level: LogLevel | str, message: str) -> str:
         normalized = LogLevel(
-            level)  # ValueError на всё, чего нет в enum
+            level)
         formatted = self._formatter.format(normalized, message)
         self._strategy.write(formatted)
         return formatted
