@@ -96,6 +96,34 @@ python -m pytest
 - структурная диаграмма в `docs/`;
 - осмысленная история Git.
 
+## Описание решения
+
+Структурная диаграмма — `docs/architecture.drawio`, превью — `docs/architecture.png`.
+
+### Strategy
+
+- **Context** — `Logger`: хранит `AbstractStrategy` и `Formatter`, в `log()` делегирует вывод через `strategy.write()`.
+- **Strategy** — `AbstractStrategy` с методом `write(formatted: str)`.
+- **ConcreteStrategy** — `ConsoleStrategy`, `FileStrategy`, `UpperFileStrategy`.
+- `FileStrategy` содержит hook `_render()`; `UpperFileStrategy` переопределяет только его, поэтому запись в файл не дублируется.
+
+### Factory Method
+
+- **Creator** — `AbstractLoggerFactory` с абстрактным `create_strategy()` и шаблонным `create_logger()`.
+- **ConcreteCreator** — `ConsoleLoggerFactoryCreator`, `FileLoggerFactoryCreator`, `UpperFileLoggerCreator`.
+- **Product** — `AbstractStrategy`; каждый создатель возвращает свою реализацию.
+- Клиент не создаёт стратегии напрямую: только `creator.create_logger()`.
+
+### Запуск
+
+```bash
+uv sync --extra dev
+uv run python app.py
+uv run pytest
+```
+
+`app.py` — единственное место выбора создателя (composition root). Уровень сообщения валидируется через `LogLevel`, некорректное значение даёт `ValueError`.
+
 ## Вопросы к защите
 
 1. Какую проектную проблему решает Strategy в вашей реализации?
