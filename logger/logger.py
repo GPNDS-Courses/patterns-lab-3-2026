@@ -13,8 +13,7 @@ class Logger:
         self._formatter = formatter or Formatter()
 
     def log(self, level: LogLevel | str, message: str) -> str:
-        normalized = LogLevel(
-            level)
+        normalized = LogLevel(level)
         formatted = self._formatter.format(normalized, message)
         self._strategy.write(formatted)
         return formatted
